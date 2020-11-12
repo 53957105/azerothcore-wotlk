@@ -32,7 +32,7 @@ public:
     uint64 GetRowCount() const { return _rowCount; }
     uint32 GetFieldCount() const { return _fieldCount; }
 #ifdef ELUNA
-    std::string GetFieldName(uint32 index) const;
+    char* GetFieldName(uint32 index) const;
 #endif
     Field* Fetch() const { return _currentRow; }
     const Field& operator [] (uint32 index) const
