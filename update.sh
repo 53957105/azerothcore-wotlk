@@ -1,1 +1,1 @@
-git fetch --all && git reset --hard origin/master && composer install && php artisan migrate && chown -R www:www ./* && php artisan cache:clear
+git fetch --all && git reset --hard origin/master
