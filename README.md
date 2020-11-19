@@ -73,7 +73,7 @@ cp .env.dist .env
 WORLD_EXTERNAL_PORT=1001
 AUTH_EXTERNAL_PORT=1002
 DB_EXTERNAL_PORT=1003
-DB_ROOT_PASSWORD=Li4111930 #随机字符串
+DB_ROOT_PASSWORD=123456 #随机字符串
 SOAP_EXTERNAL_PORT=1004
 
 ```
@@ -96,9 +96,9 @@ chmod +x -R ../azerothcore-wotlk
  - docker/worldserver/etc/worldserver.conf
 
 ```
-LoginDatabaseInfo     = "ac-database;3306;root;Li4111930;acore_auth"
-WorldDatabaseInfo     = "ac-database;3306;root;Li4111930;acore_world"
-CharacterDatabaseInfo = "ac-database;3306;root;Li4111930;acore_characters"
+LoginDatabaseInfo     = "ac-database;3306;root;123456;acore_auth"
+WorldDatabaseInfo     = "ac-database;3306;root;123456;acore_world"
+CharacterDatabaseInfo = "ac-database;3306;root;123456;acore_characters"
 
 
 # 开启SOAP
@@ -110,7 +110,7 @@ SOAP.Port = 7878
 - docker/authserver/etc/authserver.conf
 
 ```
-LoginDatabaseInfo = "ac-database;3306;root;Li4111930;acore_auth"
+LoginDatabaseInfo = "ac-database;3306;root;123456;acore_auth"
 ```
 
 
@@ -190,7 +190,7 @@ docker-compose down
 
 
 # 游戏测试
-## GM命令行创建账户
+## 命令行创建GM账户
 > 进入 /azerothcore-wotlk  目录
 
 1. 进入世界服务器:
@@ -198,10 +198,10 @@ docker-compose down
 ```
 docker attach azerothcore-wotlk_ac-worldserver_1
 ```
-2. 输入GM命令:
+2. 输入命令:
 
 ```
-account create admin Li4111930
+account create admin 123456
 
 account set gmlevel admin 3 -1
 ```
@@ -225,7 +225,7 @@ goto end
 :end
 ```
 2. 双击 [ 登录.bat ], 进入游戏
-3. 使用 admin admin 登录游戏
+3. 使用 admin 123456 登录游戏
 4. 登录后创建角色
 5. 进入游戏
 
@@ -241,8 +241,14 @@ https://www.bt.cn/bbs/thread-19376-1-1.html
 > 只安装面板,不需要安装任何web服务器工具
 ## 接口配置
 1. 面板设置->API接口
-2. 启用接口,记录密钥
-3. 添加服务器ip到白名单, 目前成都服务器: 148.70.31.191
+2. 启用接口,并保存API密钥
+3. 添加服务器ip到白名单, 目前 wowbest.top 服务器IP: 148.70.31.191
+
+## 开放端口
+- 1001 : 服务器连接端口
+- 1002 : 用户登录端口
+- 1003 : mysql数据库端口
+- 1004 : SOAP端口
 
 # 服务器关键信息
 
@@ -252,34 +258,12 @@ https://www.bt.cn/bbs/thread-19376-1-1.html
 - mysql数据库端口
 - 数据库账户/密码
 - SOAP端口
-- 管理员账户/密码
+- GM账户/密码
 - 宝塔地址
 - 宝塔API接口密钥
 
 
 
-# 服务器要求
-## 开放端口
-- 1001 : 服务器连接端口
-- 1002 : 用户登录端口
-- 1003 : mysql数据库端口
-- 1004 : SOAP端口
-
-## 配置要求
-### 10人同时在线(最低)
-- CPU: 2核
-- 内存: 4G
-- 带宽: 2M
-
-### 100人同时在线
-- CPU: 4核
-- 内存: 8G
-- 带宽: 5M
-
-### 1000人同时在线
-- CPU: 4核
-- 内存: 16G
-- 带宽: 10M
 
 
 
