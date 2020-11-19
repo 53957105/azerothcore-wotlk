@@ -191,7 +191,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case EVENT_SKADI_START:
                     {
@@ -204,6 +204,7 @@ public:
                         else
                             EnterEvadeMode();
 
+                        events.PopEvent();
                         break;
                     }
                 case EVENT_SKADI_CRUSH:
@@ -429,7 +430,7 @@ public:
         void UpdateAI(uint32 diff)
         {
             events.Update(diff);
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case EVENT_GRAUF_CHECK:
                     {
@@ -446,6 +447,7 @@ public:
                         SpawnHelpers(0);
                         events.ScheduleEvent(EVENT_GRAUF_MOVE, 15000);
                         events.ScheduleEvent(EVENT_GRAUF_SUMMON_HELPERS, 20000);
+                        events.PopEvent();
                         break;
                     }
                 case EVENT_GRAUF_MOVE:
@@ -476,6 +478,7 @@ public:
                     {
                         RemoveSkadi(false);
                         me->DespawnOrUnsummon();
+                        events.PopEvent();
                         break;
                     }
             }

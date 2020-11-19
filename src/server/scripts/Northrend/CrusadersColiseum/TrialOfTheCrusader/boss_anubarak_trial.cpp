@@ -252,13 +252,14 @@ public:
                 return;
             }
 
-            switch( events.ExecuteEvent() )
+            switch( events.GetEvent() )
             {
                 case 0:
                     break;
                 case EVENT_ENRAGE:
                     {
                         me->CastSpell(me, SPELL_BERSERK, true);
+                        events.PopEvent();
                     }
                     break;
                 case EVENT_RESPAWN_SPHERE:
@@ -314,6 +315,7 @@ public:
                         events.RescheduleEvent(EVENT_EMERGE, EMERGE_INTERVAL);
                         events.RescheduleEvent(EVENT_SPELL_SUMMON_SPIKE, 2500);
                         events.RescheduleEvent(EVENT_SUMMON_SCARAB, 3000);
+                        events.PopEvent();
                     }
                     break;
                 case EVENT_SUMMON_SCARAB:
@@ -330,6 +332,7 @@ public:
                         summons.DespawnEntry(NPC_SPIKE);
                         events.CancelEvent(EVENT_SUMMON_SCARAB);
                         events.RescheduleEvent(EVENT_EMERGE_2, 2000);
+                        events.PopEvent();
                     }
                     break;
                 case EVENT_EMERGE_2:
@@ -343,10 +346,12 @@ public:
                         events.RescheduleEvent(EVENT_SPELL_FREEZING_SLASH, urand(7000, 15000));
                         events.RescheduleEvent(EVENT_SPELL_PENETRATING_COLD, urand(15000, 20000));
                         events.RescheduleEvent(EVENT_SUBMERGE, SUBMERGE_INTERVAL);
+                        events.PopEvent();
                     }
                     break;
                 case EVENT_SPELL_SUMMON_SPIKE:
                     me->CastSpell(me, SPELL_SUMMON_SPIKE, true);
+                    events.PopEvent();
                     break;
             }
 
@@ -368,6 +373,7 @@ public:
             Talk(SAY_DEATH);
             if( pInstance )
                 pInstance->SetData(TYPE_ANUBARAK, DONE);
+
 
             Player* plr = nullptr;
             if( !pInstance->instance->GetPlayers().isEmpty() )
@@ -673,7 +679,7 @@ public:
             if( me->HasUnitState(UNIT_STATE_CASTING) )
                 return;
 
-            switch( events.ExecuteEvent() )
+            switch( events.GetEvent() )
             {
                 case 0:
                     break;
@@ -691,7 +697,7 @@ public:
                         me->CastSpell(me, SPELL_EXPOSE_WEAKNESS, true);
                         me->CastSpell(me, SPELL_SPIDER_FRENZY, true);
                         me->CastSpell(me, SPELL_SUBMERGE, false);
-                        
+                        events.PopEvent();
                         events.DelayEvents(15000);
                         events.RescheduleEvent(EVENT_EMERGE, 10000);
                     }
@@ -704,7 +710,7 @@ public:
                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     me->CastSpell(me, SPELL_EMERGE, false);
                     me->RemoveAura(SPELL_SUBMERGE);
-                    
+                    events.PopEvent();
                     events.RescheduleEvent(EVENT_SUBMERGE, 30000);
                     break;
             }
@@ -807,18 +813,18 @@ public:
 
             events.Update(diff);
 
-            switch( events.ExecuteEvent() )
+            switch( events.GetEvent() )
             {
                 case 0:
                     break;
                 case 1:
                     me->CastSpell(me, SPELL_SPIKE_SPEED2, true);
-                    
+                    events.PopEvent();
                     events.RescheduleEvent(2, 7000);
                     break;
                 case 2:
                     me->CastSpell(me, SPELL_SPIKE_SPEED3, true);
-                    
+                    events.PopEvent();
                     break;
                 case 3:
                     Reset();

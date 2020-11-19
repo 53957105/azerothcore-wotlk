@@ -125,7 +125,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case EVENT_SPELL_FROST_NOVA:
                     me->CastSpell(me, SPELL_FROSTNOVA, false);
@@ -139,6 +139,7 @@ public:
                     break;
                 case EVENT_SPELL_BLINK:
                     me->CastSpell(me, SPELL_BLINK, false);
+                    events.PopEvent();
                     events.RescheduleEvent(EVENT_SPELL_FR_FI, 0);
                     break;
                 case EVENT_SPELL_BEACON:

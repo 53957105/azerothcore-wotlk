@@ -740,7 +740,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch(events.ExecuteEvent())
+            switch(events.GetEvent())
             {
                 case EVENT_SARA_P1_DOORS_CLOSE:
                     // Whispers of YS
@@ -751,6 +751,7 @@ public:
                             go->SetGoState(GO_STATE_READY);
 
                     events.ScheduleEvent(EVENT_SARA_P1_SPELLS, 0, 1, EVENT_PHASE_ONE);
+                    events.PopEvent();
                     break;
                 case EVENT_SARA_P1_SUMMON:
                     events.RepeatEvent(20000 - (std::min(_summonedGuardiansCount, (uint8)5) * 2000));
@@ -767,6 +768,7 @@ public:
                     }
                 case EVENT_SARA_P2_START:
                     {
+                        events.PopEvent();
                         EntryCheckPredicate pred(NPC_YOGG_SARON);
                         summons.DoAction(ACTION_YOGG_SARON_APPEAR, pred);
                         events.RescheduleEvent(EVENT_SARA_P2_SPAWN_START_TENTACLES, 500, 0, EVENT_PHASE_TWO);
@@ -815,10 +817,13 @@ public:
                 case EVENT_SARA_P2_REMOVE_STUN:
                     {
                         me->RemoveAura(SPELL_SHATTERED_ILLUSION);
+                        events.PopEvent();
                         summons.DoAction(ACTION_REMOVE_STUN);
                         break;
                     }
                 case EVENT_SARA_P2_SPAWN_START_TENTACLES:
+                    events.PopEvent();
+
                     me->SetOrientation(M_PI);
                     me->SetDisplayId(SARA_TRANSFORM_MODEL);
 
@@ -1143,7 +1148,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case EVENT_YS_LUNATIC_GAZE:
                     me->MonsterYell("Hoohehehahahaha... AHAHAHAHAHAHA!", LANG_UNIVERSAL, 0);
@@ -2230,10 +2235,11 @@ public:
         void UpdateAI(uint32 diff)
         {
             events.Update(diff);
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case 40:
                     {
+                        events.PopEvent();
                         uint64 _guid = _targets.at(_current);
                         ++_current;
 

@@ -223,6 +223,7 @@ public:
                     CheckChannelers();
                     if (!me->HasUnitState(UNIT_STATE_CASTING))
                         me->CastSpell(me, SPELL_EVOCATION, false);
+
                 }
                 return;
             }
@@ -231,7 +232,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case EVENT_SPELL_VOLLEY:
                     me->CastSpell(me, SPELL_SHADOW_BOLT_VOLLEY, false);
@@ -257,6 +258,7 @@ public:
                     break;
                 case EVENT_SPELL_FIRE_NOVA:
                     me->CastSpell(me, SPELL_FIRE_NOVA, true);
+                    events.PopEvent();
                     break;
             }
 
@@ -319,7 +321,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case EVENT_SPELL_SHADOW_BOLT:
                     me->CastSpell(me->GetVictim(), IsHeroic() ? SPELL_SHADOW_BOLT_H : SPELL_SHADOW_BOLT, false);

@@ -171,7 +171,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case EVENT_BALL_LIGHTNING:
                     if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM))
@@ -195,12 +195,14 @@ public:
                     {
                         EntryCheckPredicate pred(NPC_SPARK_OF_IONAR);
                         summons.DoAction(ACTION_CALLBACK, pred);
+                        events.PopEvent();
                         events.ScheduleEvent(EVENT_RESTORE, 2000, 0, 2);
                         return;
                     }
                 case EVENT_RESTORE:
                     EntryCheckPredicate pred(NPC_SPARK_OF_IONAR);
                     summons.DoAction(ACTION_SPARK_DESPAWN, pred);
+                    events.PopEvent();
 
                     me->SetVisible(true);
                     me->SetControlled(false, UNIT_STATE_STUNNED);

@@ -1686,7 +1686,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING) || me->isFeared() || me->isFrozen() || me->HasUnitState(UNIT_STATE_STUNNED) || me->HasUnitState(UNIT_STATE_CONFUSED) || ((me->GetEntry() == NPC_YMIRJAR_DEATHBRINGER || me->GetEntry() == NPC_YMIRJAR_FROSTBINDER) && me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SILENCED)))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case 0:
                     break;
@@ -1712,6 +1712,7 @@ public:
                     break;
                 case 4: // Summon Warhawk
                     me->CastSpell(me, 71705, false);
+                    events.PopEvent();
                     break;
                 case 11: // Whirlwind
                     me->CastSpell(me->GetVictim(), 41056, false);
@@ -1727,6 +1728,7 @@ public:
                     break;
                 case 31: // Arctic Chill
                     me->CastSpell(me, 71270, true);
+                    events.PopEvent();
                     break;
                 case 32: // Frozen Orb
                     if (Unit* target = SelectTarget(SELECT_TARGET_FARTHEST, 0, 30.0f, true))
@@ -1746,6 +1748,7 @@ public:
                     events.RepeatEvent(45000);
                     break;
                 default:
+                    events.PopEvent();
                     break;
             }
 
@@ -1946,40 +1949,34 @@ public:
         void HandleEvent(SpellEffIndex effIndex)
         {
             PreventHitDefaultEffect(effIndex);
-            uint32 trapId = 0;
+            float range = 0.0f;
             switch (GetSpellInfo()->Effects[effIndex].MiscValue)
             {
                 case EVENT_AWAKEN_WARD_1:
-                    trapId = GO_SPIRIT_ALARM_1;
-                    break;
                 case EVENT_AWAKEN_WARD_2:
-                    trapId = GO_SPIRIT_ALARM_2;
+                    range = 100.0f;
                     break;
                 case EVENT_AWAKEN_WARD_3:
-                    trapId = GO_SPIRIT_ALARM_3;
-                    break;
                 case EVENT_AWAKEN_WARD_4:
-                    trapId = GO_SPIRIT_ALARM_4;
+                    range = 50.0f;
                     break;
                 default:
                     return;
             }
 
-            if (GameObject* trap = GetCaster()->FindNearestGameObject(trapId, 5.0f))
-            {
-                trap->SetRespawnTime(trap->GetGOInfo()->GetAutoCloseTime() / IN_MILLISECONDS);
-            }
-
             std::list<Creature*> wards;
-            GetCaster()->GetCreatureListWithEntryInGrid(wards, NPC_DEATHBOUND_WARD, 150.0f);
+            GetCaster()->GetCreatureListWithEntryInGrid(wards, NPC_DEATHBOUND_WARD, range);
             wards.sort(acore::ObjectDistanceOrderPred(GetCaster()));
             for (std::list<Creature*>::iterator itr = wards.begin(); itr != wards.end(); ++itr)
             {
                 if ((*itr)->IsAlive() && (*itr)->HasAura(SPELL_STONEFORM))
                 {
-                    (*itr)->AI()->Talk(SAY_TRAP_ACTIVATE);
-                    (*itr)->RemoveAurasDueToSpell(SPELL_STONEFORM);
-                    (*itr)->AI()->SetData(1, 1);
+                    if (Player* target = (*itr)->SelectNearestPlayer(150.0f))
+                    {
+                        (*itr)->AI()->Talk(SAY_TRAP_ACTIVATE);
+                        (*itr)->RemoveAurasDueToSpell(SPELL_STONEFORM);
+                        (*itr)->AI()->AttackStart(target);
+                    }
                     break;
                 }
             }
@@ -2585,7 +2582,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case 0:
                     break;
@@ -2650,7 +2647,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case 0:
                     break;
@@ -2705,7 +2702,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case 0:
                     break;
@@ -2767,7 +2764,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case 0:
                     break;
@@ -2886,7 +2883,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case 0:
                     break;
@@ -3009,7 +3006,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            if (uint32 e = events.ExecuteEvent())
+            if (uint32 e = events.GetEvent())
             {
                 Unit* target = nullptr;
                 if (sesi_spells[e - 1].targetType == 1)
@@ -3108,7 +3105,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case 1:
                     if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 40.0f, true))
@@ -3258,7 +3255,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case 1:
                     if (me->GetVictim() && !me->GetVictim()->HasAura(71163) && me->GetVictim()->GetDistance(me) > 5.0f && me->GetVictim()->GetDistance(me) < 30.0f)
@@ -3399,7 +3396,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case 0:
                     break;

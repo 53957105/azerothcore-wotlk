@@ -145,7 +145,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case EVENT_PRINCE_BLOODTHIRST:
                     {
@@ -174,6 +174,7 @@ public:
                     }
                 case EVENT_PRINCE_VANISH:
                     {
+                        events.PopEvent();
                         //Count alive players
                         uint8 count = 0;
                         Unit* pTarget;
@@ -207,11 +208,13 @@ public:
                             me->RemoveAura(SPELL_VANISH);
                         }
 
+                        events.PopEvent();
                         events.ScheduleEvent(EVENT_PRINCE_RESCHEDULE, 20000);
                         break;
                     }
                 case EVENT_PRINCE_RESCHEDULE:
                     {
+                        events.PopEvent();
                         ScheduleEvents();
                         break;
                     }

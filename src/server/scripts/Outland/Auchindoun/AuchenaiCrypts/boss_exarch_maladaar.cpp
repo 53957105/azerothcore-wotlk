@@ -97,13 +97,14 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case EVENT_CHECK_HEALTH:
                     if (HealthBelowPct(25))
                     {
                         Talk(SAY_SUMMON);
                         me->CastSpell(me, SPELL_SUMMON_AVATAR, false);
+                        events.PopEvent();
                         return;
                     }
                     events.RepeatEvent(2000);
@@ -189,7 +190,7 @@ public:
                 return;
 
             events.Update(diff);
-            if (events.ExecuteEvent() == EVENT_STOLEN_SOUL_SPELL)
+            if (events.GetEvent() == EVENT_STOLEN_SOUL_SPELL)
             {
                 switch (myClass)
                 {

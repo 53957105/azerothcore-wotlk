@@ -292,7 +292,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case EVENT_BJARNGRIM_CHANGE_STANCE:
                     // roll new stance
@@ -399,7 +399,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case EVENT_ARC_WELD:
                     me->CastSpell(me->GetVictim(), SPELL_ARC_WELD, true);

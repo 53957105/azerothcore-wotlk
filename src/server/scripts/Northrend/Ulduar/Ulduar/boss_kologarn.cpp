@@ -391,6 +391,7 @@ public:
                 case EVENT_STONE_SHOUT:
                     if (_left || _right)
                     {
+                        events.PopEvent();
                         return;
                     }
 
@@ -462,10 +463,12 @@ public:
                     }
                 case EVENT_RESTORE_ARM_LEFT:
                     // shouldn't happen
+                    events.PopEvent();
                     AttachLeftArm();
                     return;
                 case EVENT_RESTORE_ARM_RIGHT:
                     // shouldn't happen
+                    events.PopEvent();
                     AttachRightArm();
                     return;
             }
