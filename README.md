@@ -1,12 +1,11 @@
 
 # 广告
-[魔兽世界服务端管理系统](https://wowbest.top)
+[魔兽世界服务端管理系统](http://wowbest.top)
 > 可以在线管理服务器
 
 # 准备
-1. linux系统服务器1台
+1. linux系统服务器1台 (  [尊云服务器: 68/月](https://www.zun.com/?u=56B6A2) )
 2. 服务器可被外网访问, 
-3. 推荐 [尊云服务器: 68/月](https://www.zun.com/?u=56B6A2) 
 > 尊云优惠码： 4AF4A9 （下单立享8.5折）
 
 # 软件安装
@@ -42,7 +41,7 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-
 ```
 sudo chmod +x /usr/local/bin/docker-compose
 ```
-## 安装Git
+### 安装Git
 
 ```
 yum install git
@@ -204,7 +203,7 @@ goto end
 # 宝塔面板
 ## 安装
 https://www.bt.cn/bbs/thread-19376-1-1.html
-> 只安装面板,不需要安装任何web服务器工具
+> 只安装面板,不需要安装任何web服务相关工具
 ## 接口配置
 1. 面板设置->API接口
 2. 启用接口,并保存API密钥
