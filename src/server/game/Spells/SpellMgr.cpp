@@ -3149,7 +3149,8 @@ void SpellMgr::LoadSpellCustomAttr()
             case 67861:
             case 67862:
             case 67863:
-            case 67721: // Anub'arak, Nerubian Burrower, Expose Weakness
+            case 67721: // Anub'arak, Nerubian Burrower, Expose Weakness (normal)
+            case 67847: // Anub'arak, Nerubian Burrower, Expose Weakness (heroic)
             case 64638: // Ulduar, Winter Jormungar, Acidic Bite
             case 71157: // Icecrown Citadel, Plagued Zombie, Infected Wound
             case 72963: // Icecrown Citadel, Valithria Dreamwalker, Flesh Rot (Rot Worm)
@@ -3177,6 +3178,8 @@ void SpellMgr::LoadSpellCustomAttr()
             case 58567: // Player Sunder Armor
             case 12579: // Player Winter's Chill
             case 29306: // Naxxramas(Gluth's Zombies): Infected Wound
+            case 61920: // Ulduar(Spellbreaker): Supercharge
+            case 63978: // Ulduar(Rubble): Stone Nova 
                 spellInfo->AttributesCu |= SPELL_ATTR0_CU_SINGLE_AURA_STACK;
                 break;
             case 43138: // North Fleet Reservist Kill Credit
@@ -4316,6 +4319,17 @@ void SpellMgr::LoadDbcDataCorrections()
             // Glyph of Barkskin
             case 63058:
                 spellInfo->EffectApplyAuraName[EFFECT_0] = SPELL_AURA_MOD_ATTACKER_MELEE_CRIT_CHANCE;
+                break;
+            // Thorns
+            case 467:
+            case 782:
+            case 1075:
+            case 8914:
+            case 9756:
+            case 9910:
+            case 26992:
+            case 53307:
+                spellInfo->AttributesEx3 |= SPELL_ATTR3_IGNORE_HIT_RESULT;
                 break;
 
 
