@@ -4,8 +4,7 @@
 [worldserver]
 
 # Do NOT change those Dir configs
-# Files in LogsDir will reflect on your host directory: docker/worldserver/logs
-LogsDir = "/azeroth-server/logs"
+LogsDir = "/azeroth-server/logs" # will reflect on your host directory: docker/worldserver/logs
 DataDir = "/azeroth-server/data"
 
 # Change this configuration accordingly with your docker setup

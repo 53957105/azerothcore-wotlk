@@ -212,13 +212,15 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case EVENT_DIREBREW_RESPAWN1:
                     SummonSister(NPC_ILSA_DIREBREW);
+                    events.PopEvent();
                     break;
                 case EVENT_DIREBREW_RESPAWN2:
                     SummonSister(NPC_URSULA_DIREBREW);
+                    events.PopEvent();
                     break;
                 case EVENT_DIREBREW_DISARM:
                     me->CastSpell(me->GetVictim(), SPELL_DIREBREW_DISARM, false);
@@ -233,6 +235,7 @@ public:
                     }
                     if (me->GetHealthPct() < 35 && phase == 1)
                     {
+                        events.PopEvent();
                         SummonSister(NPC_URSULA_DIREBREW);
                         return;
                     }
@@ -322,7 +325,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case EVENT_SISTERS_BARREL:
                     me->CastSpell(me->GetVictim(), SPELL_BARRELED, false);
@@ -700,7 +703,7 @@ public:
         void UpdateAI(uint32 diff)
         {
             events.Update(diff);
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case EVENT_CHECK_HOUR:
                     {
@@ -741,6 +744,7 @@ public:
                     {
                         events.CancelEvent(EVENT_SPAWN_MOLE_MACHINE);
                         events.ScheduleEvent(EVENT_FINISH_ATTACK, 20000);
+                        events.PopEvent();
                         break;
                     }
                 case EVENT_FINISH_ATTACK:

@@ -270,7 +270,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case EVENT_HEAT:
                     me->CastSpell(me, me->GetMap()->IsHeroic() ? SPELL_HEAT_H : SPELL_HEAT_N, true);
@@ -291,6 +291,7 @@ public:
                 case EVENT_MOVE_TO_ANVIL:
                     GetNextPos();
                     me->GetMotionMaster()->MovePoint(PointID, x, y, z);
+                    events.PopEvent();
                     return;
                 case EVENT_POSITION:
                     if (me->GetDistance(1331.9f, -106, 56) > 95)
@@ -380,7 +381,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case EVENT_BLAST:
                     me->CastSpell(me, SPELL_BLAST_WAVE, false);
@@ -505,10 +506,11 @@ public:
                 return;
 
             events.Update(diff);
-            uint32 eventId = events.ExecuteEvent();
+            uint32 eventId = events.GetEvent();
 
             if (eventId == EVENT_UNFREEZE)
             {
+                events.PopEvent();
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 me->CastSpell(me, SPELL_AWAKEN, true);
                 me->RemoveAllAuras();

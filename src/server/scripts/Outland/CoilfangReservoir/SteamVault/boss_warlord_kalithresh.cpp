@@ -85,7 +85,7 @@ public:
                 return;
 
             events.Update(diff);
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case EVENT_SPELL_REFLECTION:
                     me->CastSpell(me, SPELL_SPELL_REFLECTION, false);

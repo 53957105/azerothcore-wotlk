@@ -154,12 +154,13 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case 0:
                     break;
                 case EVENT_ENABLE_BONE_SLICE:
                     _boneSlice = true;
+                    events.PopEvent();
                     break;
                 case EVENT_SPELL_BONE_SPIKE_GRAVEYARD:
                     {
@@ -176,6 +177,7 @@ public:
                     break;
                 case EVENT_SPELL_COLDFLAME_BONE_STORM:
                     me->CastSpell(me, SPELL_COLDFLAME_BONE_STORM, false);
+                    events.PopEvent();
                     break;
                 case EVENT_WARN_BONE_STORM:
                     _boneSlice = false;
@@ -194,6 +196,7 @@ public:
                         uint32 _boneStormDuration = RAID_MODE<uint32>(20000, 30000, 20000, 30000);
                         if (Aura* pStorm = me->GetAura(SPELL_BONE_STORM))
                             pStorm->SetDuration(int32(_boneStormDuration));
+                        events.PopEvent();
                         events.ScheduleEvent(EVENT_BONE_STORM_MOVE, 0);
                         events.ScheduleEvent(EVENT_END_BONE_STORM, _boneStormDuration + 1);
                     }
@@ -226,6 +229,7 @@ public:
                     me->GetMotionMaster()->MovementExpired();
                     me->SetReactState(REACT_AGGRESSIVE);
                     DoStartMovement(me->GetVictim());
+                    events.PopEvent();
                     events.CancelEvent(EVENT_BONE_STORM_MOVE);
                     events.ScheduleEvent(EVENT_ENABLE_BONE_SLICE, 10000);
                     if (!IsHeroic())
@@ -234,6 +238,7 @@ public:
                 case EVENT_ENRAGE:
                     me->CastSpell(me, SPELL_BERSERK, true);
                     Talk(SAY_BERSERK);
+                    events.PopEvent();
                     break;
             }
 
@@ -322,7 +327,7 @@ public:
         {
             events.Update(diff);
 
-            switch (events.ExecuteEvent())
+            switch (events.GetEvent())
             {
                 case 0:
                     break;
@@ -335,6 +340,7 @@ public:
                         float ny = me->GetPositionY() + 5.0f * sin(me->GetOrientation());
                         if (!me->IsWithinLOS(nx, ny, 42.5f))
                         {
+                            events.PopEvent();
                             break;
                         }
                         me->NearTeleportTo(nx, ny, 42.5f, me->GetOrientation());

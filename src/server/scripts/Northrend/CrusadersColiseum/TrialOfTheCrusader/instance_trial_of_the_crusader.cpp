@@ -572,7 +572,7 @@ public:
         void Update(uint32 diff)
         {
             events.Update(diff);
-            switch( events.ExecuteEvent() )
+            switch( events.GetEvent() )
             {
                 case 0:
                     break;
@@ -590,18 +590,20 @@ public:
                 case EVENT_OPEN_GATE:
                     {
                         HandleGameObject(GO_MainGateGUID, true);
-                        break;
+                        events.PopEvent();
                     }
+                    break;
                 case EVENT_CLOSE_GATE:
                     {
                         HandleGameObject(GO_MainGateGUID, false);
+                        events.PopEvent();
                     }
                     break;
                 case EVENT_SCENE_001:
                     {
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
                             c->AI()->Talk(SAY_STAGE_0_01);
-
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_002, 22000);
                     }
                     break;
@@ -609,7 +611,7 @@ public:
                     {
                         if( Creature* c = instance->GetCreature(NPC_VarianGUID) )
                             c->AI()->Talk(SAY_STAGE_0_03a);
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_003, 5000);
                     }
                     break;
@@ -617,7 +619,7 @@ public:
                     {
                         if( Creature* c = instance->GetCreature(NPC_GarroshGUID) )
                             c->AI()->Talk(SAY_STAGE_0_03h);
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_004, 8000);
                     }
                     break;
@@ -630,7 +632,7 @@ public:
                             c->AI()->Talk(SAY_STAGE_0_02);
                         HandleGameObject(GO_MainGateGUID, true);
                         HandleGameObject(GO_EnterGateGUID, false);
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SUMMON_GORMOK, 1000);
                         if (instance->IsHeroic())
                         {
@@ -653,14 +655,14 @@ public:
                     if( Creature* c = instance->GetCreature(NPC_IcehowlGUID) )
                         if (c->IsAlive())
                             c->CastSpell(c, 26662, true);
-                    
+                    events.PopEvent();
                     break;
                 case EVENT_SUMMON_GORMOK:
                     {
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
                             if( Creature* gormok = c->SummonCreature(NPC_GORMOK, Locs[LOC_BEHIND_GATE].GetPositionX(), Locs[LOC_BEHIND_GATE].GetPositionY(), Locs[LOC_BEHIND_GATE].GetPositionZ(), Locs[LOC_BEHIND_GATE].GetOrientation(), TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000) )
                                 gormok->GetMotionMaster()->MovePoint(0, Locs[LOC_GATE_FRONT].GetPositionX(), Locs[LOC_GATE_FRONT].GetPositionY(), Locs[LOC_GATE_FRONT].GetPositionZ());
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_GORMOK_ATTACK, 10000);
                         events.RescheduleEvent(EVENT_CLOSE_GATE, 6000);
                     }
@@ -679,18 +681,19 @@ public:
                                 c->AI()->DoZoneInCombat();
                             }
                         }
-                        break;
+                        events.PopEvent();
                     }
+                    break;
                 case EVENT_SCENE_005:
                     {
                         northrendBeastsMask |= 16;
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
                             c->AI()->Talk(SAY_STAGE_0_04);
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_OPEN_GATE, 3000);
                         events.RescheduleEvent(EVENT_SUMMON_ACIDMAW_AND_DREADSCALE, 4000);
-                        break;
                     }
+                    break;
                 case EVENT_SUMMON_ACIDMAW_AND_DREADSCALE:
                     {
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
@@ -700,19 +703,18 @@ public:
                             if( Creature* acidmaw = c->SummonCreature(NPC_ACIDMAW, Locs[LOC_ACIDMAW].GetPositionX(), Locs[LOC_ACIDMAW].GetPositionY(), Locs[LOC_ACIDMAW].GetPositionZ(), Locs[LOC_ACIDMAW].GetOrientation(), TEMPSUMMON_MANUAL_DESPAWN) )
                                 acidmaw->AddAura(53421, acidmaw);
                         }
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_005_2, 4000);
-                        break;
                     }
-                    
+                    break;
                 case EVENT_SCENE_005_2:
                     {
                         if( Creature* dreadscale = instance->GetCreature(NPC_DreadscaleGUID) )
                             dreadscale->GetMotionMaster()->MovePoint(0, Locs[LOC_DREADSCALE].GetPositionX(), Locs[LOC_DREADSCALE].GetPositionY(), Locs[LOC_DREADSCALE].GetPositionZ());
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_ACIDMAW_AND_DREADSCALE_ATTACK, 7000);
-                        break;
                     }
+                    break;
                 case EVENT_ACIDMAW_AND_DREADSCALE_ATTACK:
                     {
                         HandleGameObject(GO_MainGateGUID, false);
@@ -740,28 +742,29 @@ public:
                                 c->AI()->DoZoneInCombat();
                             }
                         }
-                        break;
+                        events.PopEvent();
                     }
+                    break;
                 case EVENT_SCENE_006:
                     {
                         northrendBeastsMask |= 32;
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
                             c->AI()->Talk(SAY_STAGE_0_05);
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_OPEN_GATE, 2000);
                         events.RescheduleEvent(EVENT_SUMMON_ICEHOWL, 3000);
-                        break;
                     }
+                    break;
                 case EVENT_SUMMON_ICEHOWL:
                     {
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
                             if( Creature* icehowl = c->SummonCreature(NPC_ICEHOWL, Locs[LOC_BEHIND_GATE].GetPositionX(), Locs[LOC_BEHIND_GATE].GetPositionY(), Locs[LOC_BEHIND_GATE].GetPositionZ(), Locs[LOC_BEHIND_GATE].GetOrientation(), TEMPSUMMON_CORPSE_TIMED_DESPAWN, 630000000) )
                                 icehowl->GetMotionMaster()->MovePoint(0, Locs[LOC_GATE_FRONT].GetPositionX(), Locs[LOC_GATE_FRONT].GetPositionY(), Locs[LOC_GATE_FRONT].GetPositionZ());
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_ICEHOWL_ATTACK, 10000);
                         events.RescheduleEvent(EVENT_CLOSE_GATE, 6000);
-                        break;
                     }
+                    break;
                 case EVENT_ICEHOWL_ATTACK:
                     {
                         if( Creature* c = instance->GetCreature(NPC_IcehowlGUID) )
@@ -775,16 +778,18 @@ public:
                                 c->AI()->DoZoneInCombat();
                             }
                         }
-                        break;
+                        events.PopEvent();
                     }
+                    break;
                 case EVENT_SCENE_BEASTS_DONE:
                     {
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
                             c->AI()->Talk(SAY_STAGE_0_06);
                         if( Creature* c = instance->GetCreature(NPC_BarrettGUID) )
                             c->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-                        break;
+                        events.PopEvent();
                     }
+                    break;
                 case EVENT_SCENE_101:
                     {
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
@@ -806,17 +811,18 @@ public:
                                 icehowl->DestroyForNearbyPlayers();
                             }
                         }
-                        break;
+                        events.PopEvent();
                     }
+                    break;
                 case EVENT_SCENE_102:
                     {
                         HandleGameObject(GO_MainGateGUID, false);
                         if( Creature* c = instance->GetCreature(NPC_FizzlebangGUID) )
                             c->AI()->Talk(SAY_STAGE_1_02);
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_103, 11000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_103:
                     {
                         if( Creature* c = instance->GetCreature(NPC_FizzlebangGUID) )
@@ -826,10 +832,10 @@ public:
                             if( Creature* trigger = c->SummonCreature(NPC_PURPLE_GROUND, Locs[LOC_CENTER].GetPositionX(), Locs[LOC_CENTER].GetPositionY(), Locs[LOC_CENTER].GetPositionZ(), Locs[LOC_CENTER].GetOrientation(), TEMPSUMMON_MANUAL_DESPAWN) )
                                 NPC_PurpleGroundGUID = trigger->GetGUID();
                         }
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_104, 5000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_104:
                     {
                         if( Creature* c = instance->GetCreature(NPC_FizzlebangGUID) )
@@ -843,10 +849,10 @@ public:
                             }
                             c->HandleEmoteCommand(EMOTE_STATE_SPELL_PRECAST);
                         }
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SUMMON_JARAXXUS, 5000);
-                        break;
                     }
+                    break;
                 case EVENT_SUMMON_JARAXXUS:
                     {
                         if( Creature* c = instance->GetCreature(NPC_FizzlebangGUID) )
@@ -856,10 +862,10 @@ public:
                             c->HandleEmoteCommand(EMOTE_STATE_NONE);
                             c->AI()->Talk(SAY_STAGE_1_04);
                         }
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_105, 3000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_105:
                     {
                         if( Creature* c = instance->GetCreature(NPC_JaraxxusGUID) )
@@ -870,26 +876,26 @@ public:
                         if( Creature* c = instance->GetCreature(NPC_PortalGUID) )
                             c->DespawnOrUnsummon();
                         NPC_PortalGUID = 0;
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_106, 10000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_106:
                     {
                         if( Creature* c = instance->GetCreature(NPC_JaraxxusGUID) )
                             c->AI()->Talk(SAY_STAGE_1_05);
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_107, 5000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_107:
                     {
                         if( Creature* c = instance->GetCreature(NPC_FizzlebangGUID) )
                             c->AI()->Talk(SAY_STAGE_1_06);
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_108, 800);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_108:
                     {
                         if( Creature* c = instance->GetCreature(NPC_JaraxxusGUID) )
@@ -902,20 +908,20 @@ public:
                                 Unit::Kill(f, f);
                             }
                         }
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_109, 5000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_109:
                     {
                         if( Creature* c = instance->GetCreature(NPC_JaraxxusGUID) )
                             c->SetFacingTo(3 * M_PI / 2);
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
                             c->AI()->Talk(SAY_STAGE_1_07);
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_JARAXXUS_ATTACK, 6000);
-                        break;
                     }
+                    break;
                 case EVENT_JARAXXUS_ATTACK:
                     {
                         InstanceProgress = INSTANCE_PROGRESS_JARAXXUS_INTRO_DONE;
@@ -930,40 +936,42 @@ public:
                                 c->AI()->DoZoneInCombat();
                             }
                         }
-                        break;
+                        events.PopEvent();
                     }
+                    break;
                 case EVENT_SCENE_110:
                     {
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
                             c->AI()->Talk(SAY_STAGE_1_08);
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_111, 18000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_111:
                     {
                         if( Creature* c = instance->GetCreature(NPC_GarroshGUID) )
                             c->AI()->Talk(SAY_STAGE_1_09);
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_112, 9000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_112:
                     {
                         if( Creature* c = instance->GetCreature(NPC_VarianGUID) )
                             c->AI()->Talk(SAY_STAGE_1_10);
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_113, 5000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_113:
                     {
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
                             c->AI()->Talk(SAY_STAGE_1_11);
                         if( Creature* c = instance->GetCreature(NPC_BarrettGUID) )
                             c->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-                        break;
-                    } 
+                        events.PopEvent();
+                    }
+                    break;
                 case EVENT_SCENE_201:
                     {
                         // move Jaraxxus to side, can't remove corpse because of loot!
@@ -976,10 +984,10 @@ public:
 
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
                             c->AI()->Talk(SAY_STAGE_2_01);
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_202, 9000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_202:
                     {
                         Map::PlayerList const& pl = instance->GetPlayers();
@@ -1003,16 +1011,17 @@ public:
                                 c->AI()->Talk(SAY_STAGE_2_02a);
                             events.RescheduleEvent(EVENT_SCENE_203, 18000);
                         }
-                        break;
+                        events.PopEvent();
                     }
+                    break;
                 case EVENT_SCENE_203:
                     {
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
                             c->AI()->Talk(SAY_STAGE_2_03);
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_204, 5000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_204:
                     {
                         if( TeamIdInInstance == TEAM_ALLIANCE )
@@ -1027,17 +1036,17 @@ public:
                                 c->AI()->Talk(SAY_STAGE_2_04a);
                             events.RescheduleEvent(EVENT_SCENE_205, 5000);
                         }
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SUMMON_CHAMPIONS, 2500);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_205:
                     {
                         if( Creature* c = instance->GetCreature(TeamIdInInstance == TEAM_ALLIANCE ? NPC_VarianGUID : NPC_GarroshGUID) )
                             c->AI()->Talk(TeamIdInInstance == TEAM_ALLIANCE ? SAY_STAGE_2_05a : SAY_STAGE_2_05h);
-
-                        break;
+                        events.PopEvent();
                     }
+                    break;
                 case EVENT_SUMMON_CHAMPIONS:
                     {
                         std::vector<uint32> vHealerEntries;
@@ -1110,9 +1119,10 @@ public:
                         }
 
                         HandleGameObject(GO_EnterGateGUID, false);
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_CHAMPIONS_ATTACK, 4000);
-                        break;
                     }
+                    break;
                 case EVENT_CHAMPIONS_ATTACK:
                     {
                         for( std::vector<uint64>::iterator itr = NPC_ChampionGUIDs.begin(); itr != NPC_ChampionGUIDs.end(); ++itr )
@@ -1128,32 +1138,34 @@ public:
                         for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
                             itr->GetSource()->AddToNotify(NOTIFY_AI_RELOCATION);
                         EncounterStatus = IN_PROGRESS;
-                        break;
+                        events.PopEvent();
                     }
+                    break;
                 case EVENT_SCENE_FACTION_CHAMPIONS_DEAD:
                     {
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
                             c->AI()->Talk(SAY_STAGE_2_06);
                         if( Creature* c = instance->GetCreature(NPC_BarrettGUID) )
                             c->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-                        break;
-                    }   
+                        events.PopEvent();
+                    }
+                    break;
                 case EVENT_SCENE_301:
                     {
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
                             c->AI()->Talk(SAY_STAGE_3_01);
-
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_302, 13000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_302:
                     {
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
                             c->AI()->Talk(SAY_STAGE_3_02);
-
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_303, 3000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_303:
                     {
                         HandleGameObject(GO_EnterGateGUID, false);
@@ -1165,10 +1177,10 @@ public:
                             if( Creature* t = c->SummonCreature(NPC_DARKBANE, Locs[LOC_VALKYR_LEFT].GetPositionX(), Locs[LOC_VALKYR_LEFT].GetPositionY(), Locs[LOC_VALKYR_LEFT].GetPositionZ(), Locs[LOC_VALKYR_LEFT].GetOrientation(), TEMPSUMMON_CORPSE_TIMED_DESPAWN, 630000000) )
                                 t->GetMotionMaster()->MovePoint(0, Locs[LOC_VALKYR_DEST_LEFT].GetPositionX(), Locs[LOC_VALKYR_DEST_LEFT].GetPositionY(), Locs[LOC_VALKYR_DEST_LEFT].GetPositionZ());
                         }
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_304, 6250);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_304:
                     {
                         HandleGameObject(GO_MainGateGUID, false);
@@ -1177,10 +1189,10 @@ public:
                             c->GetMotionMaster()->MovePoint(0, Locs[LOC_VALKYR_DEST_2_RIGHT].GetPositionX(), Locs[LOC_VALKYR_DEST_2_RIGHT].GetPositionY(), Locs[LOC_VALKYR_DEST_2_RIGHT].GetPositionZ());
                         if( Creature* c = instance->GetCreature(NPC_DarkbaneGUID) )
                             c->GetMotionMaster()->MovePoint(0, Locs[LOC_VALKYR_DEST_2_LEFT].GetPositionX(), Locs[LOC_VALKYR_DEST_2_LEFT].GetPositionY(), Locs[LOC_VALKYR_DEST_2_LEFT].GetPositionZ());
-
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_VALKYRIES_ATTACK, 3250);
-                        break;
                     }
+                    break;
                 case EVENT_VALKYRIES_ATTACK:
                     {
                         if( Creature* c = instance->GetCreature(NPC_LightbaneGUID) )
@@ -1203,8 +1215,9 @@ public:
                                 c->AI()->DoZoneInCombat();
                             }*/
                         }
-                        break;
+                        events.PopEvent();
                     }
+                    break;
                 case EVENT_SCENE_VALKYR_DEAD:
                     {
                         if (TeamIdInInstance == TEAM_NEUTRAL)
@@ -1220,18 +1233,18 @@ public:
                         }
                         if( Creature* c = instance->GetCreature(TeamIdInInstance == TEAM_ALLIANCE ? NPC_VarianGUID : NPC_GarroshGUID) )
                             c->AI()->Talk((TeamIdInInstance == TEAM_ALLIANCE ? SAY_STAGE_3_03a : SAY_STAGE_3_03h));
-
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_401, 60000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_401:
                     {
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
                             c->AI()->Talk(SAY_STAGE_4_01);
-
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_402, 20000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_402:
                     {
                         HandleGameObject(GO_EnterGateGUID, false);
@@ -1245,10 +1258,10 @@ public:
                                 t->AI()->Talk(SAY_STAGE_4_02);
                                 t->SetVisible(false);
                             }
-
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_403, 2000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_403:
                     {
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
@@ -1257,10 +1270,10 @@ public:
                                 t->SetReactState(REACT_PASSIVE);
                                 t->CastSpell(t, 51807, true);
                             }
-
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_404, 2000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_404:
                     {
                         if( Creature* c = instance->GetCreature(NPC_LichKingGUID) )
@@ -1269,18 +1282,18 @@ public:
                             c->SetVisible(true);
                             c->GetMotionMaster()->MovePoint(0, Locs[LOC_ARTHAS]);
                         }
-
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_405, 3000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_405:
                     {
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
                             c->AI()->Talk(SAY_STAGE_4_03);
-
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_406, 7000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_406:
                     {
                         if( Creature* c = instance->GetCreature(NPC_LichKingGUID) )
@@ -1288,39 +1301,36 @@ public:
                             c->AI()->Talk(SAY_STAGE_4_04);
                             c->HandleEmoteCommand(EMOTE_ONESHOT_LAUGH);
                         }
-
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_406_2, 2500);
                         events.RescheduleEvent(EVENT_SCENE_407, 12000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_406_2:
                     {
                         if( Creature* c = instance->GetCreature(NPC_LichKingGUID) )
-                        {
                             c->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_TALK);
-                        }
-
-                        break;
+                        events.PopEvent();
                     }
-                    
+                    break;
                 case EVENT_SCENE_407:
                     {
                         if( Creature* c = instance->GetCreature(NPC_LichKingGUID) )
                             c->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
-
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_408, 4000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_408:
                     {
                         if( Creature* c = instance->GetCreature(NPC_LichKingGUID) )
                         {
                             c->HandleEmoteCommand(EMOTE_ONESHOT_KNEEL);
                         }
-
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_409, 1500);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_409:
                     {
                         if( Creature* c = instance->GetCreature(NPC_LichKingGUID) )
@@ -1336,10 +1346,10 @@ public:
                             InstanceProgress = INSTANCE_PROGRESS_ANUB_ARAK;
                             SpawnAnubArak();
                         }
-                        
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_410, 2000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_410:
                     {
                         if( Creature* c = instance->GetCreature(NPC_LichKingGUID) )
@@ -1348,9 +1358,9 @@ public:
                             c->AI()->Talk(SAY_STAGE_4_05);
                             c->DespawnOrUnsummon(0);
                         }
-
-                        break;
+                        events.PopEvent();
                     }
+                    break;
                 case EVENT_SCENE_501:
                     {
                         if( Creature* c = instance->GetCreature(NPC_TirionGUID) )
@@ -1359,10 +1369,10 @@ public:
                             c->SummonCreature(NPC_ARGENT_MAGE, Locs[LOC_MAGE].GetPositionX(), Locs[LOC_MAGE].GetPositionY(), Locs[LOC_MAGE].GetPositionZ(), Locs[LOC_MAGE].GetOrientation());
                             c->SummonGameObject(195682, 668.15f, 134.57f, 142.12f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 630000000);
                         }
-
+                        events.PopEvent();
                         events.RescheduleEvent(EVENT_SCENE_502, 20000);
-                        break;
                     }
+                    break;
                 case EVENT_SCENE_502:
                     {
                         if( instance->IsHeroic() )
@@ -1410,9 +1420,10 @@ public:
                                     }
                                 }
                         }
-                        break;
+
+                        events.PopEvent();
                     }
-                    
+                    break;
             }
         }
 

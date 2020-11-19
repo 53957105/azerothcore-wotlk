@@ -257,7 +257,7 @@ public:
             if( me->HasUnitState(UNIT_STATE_CASTING) )
                 return;
 
-            switch( events.ExecuteEvent() )
+            switch( events.GetEvent() )
             {
                 case 0:
                     break;
@@ -655,7 +655,7 @@ public:
             if( me->HasUnitState(UNIT_STATE_CASTING) || ((me->GetEntry() == NPC_JACOB || me->GetEntry() == NPC_MOKRA) && me->HasAura(SPELL_BLADESTORM)) )
                 return;
 
-            switch( events.ExecuteEvent() )
+            switch( events.GetEvent() )
             {
                 case 0:
                     break;
@@ -711,7 +711,9 @@ public:
                             me->GetMotionMaster()->MovePoint(7, *mount);
                             events.RepeatEvent(200);
                             break;
-                        }                      
+                        }
+
+                        events.PopEvent();
                     }
                     break;
                 case EVENT_MOUNT_CHARGE:
@@ -829,7 +831,7 @@ public:
 
                 /****************** HUNTER ******************/
                 case EVENT_HUNTER_SPELL_DISENGAGE:
-                    
+                    events.PopEvent();
                     break;
                 case EVENT_HUNTER_SPELL_LIGHTNING_ARROWS:
                     me->CastSpell((Unit*)NULL, SPELL_LIGHTNING_ARROWS, false);
@@ -918,7 +920,7 @@ public:
                     }
                     break;
                 case EVENT_WARRIOR_SPELL_ROLLING_THROW:
-                    
+                    events.PopEvent();
                     break;
                     /*************** WARRIOR END ****************/
             }
