@@ -8,6 +8,19 @@
 2. 服务器可被外网访问, 
 > 尊云优惠码： 4AF4A9 （下单立享8.5折）
 
+# 硬件要求
+## 最低
+1. CPU 2核
+2. 内存 4G
+3. 硬盘 20G
+4. 带宽 2M
+
+## 推荐
+1. CPU 4核
+2. 内存 8G
+3. 硬盘 30G
+4. 带宽 5M
+
 # 软件安装
 ## 检查 
 执行如下命令,检查 docker 和 docker-compose 是否安装:
@@ -123,6 +136,11 @@ SOAP.Port = 7878
 LoginDatabaseInfo = "ac-database;3306;root;123456;acore_auth"
 ```
 
+## 登录 docker
+
+```
+docker login
+```
 
 ## cmaker 编译项目
 
